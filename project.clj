@@ -1,9 +1,8 @@
-(defproject clj-discord "0.1.1-SNAPSHOT"
-  :dependencies [[org.clojure/clojure "1.8.0"]
-                 [clj-http "2.3.0"]
-                 [org.clojure/data.json "0.2.6"]
-                 [forecast-clojure "1.0.3"]
-                 [stylefruits/gniazdo "1.0.0"]]
-  :main clj-discord.core
-  :profiles {:uberjar {:aot :all}}
-)
+(defproject clj-discord-example "0.1.0-SNAPSHOT"
+  :dependencies [[clj-discord "0.1.1-SNAPSHOT"]
+                 [cheshire "5.7.1"]
+                 [clj-http "3.6.1"]
+                 [environ "1.1.0"]]
+  :main clj-discord-example.core
+  :profiles {:uberjar {:aot [clj-discord-example.core]}}
+  :user {:env {:forecast-key "e0971c18e4fe3fa0bf9cbb286be291b6"}})
