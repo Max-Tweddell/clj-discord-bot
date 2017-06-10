@@ -83,7 +83,7 @@
   (post-message channel_id (str "<@" user_id ">" message)))
 
 (defn answer-command [data command answer]
-  (if (= command (get data "content"))
+  (if (re-find (re-pattern (str "^" command)) (get data "content"))
     (post-message-with-mention 
       (get data "channel_id") 
       (str " " answer)
