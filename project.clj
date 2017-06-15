@@ -4,6 +4,7 @@
                  [org.clojure/java.jdbc "0.7.0-alpha3"]
                  [java-jdbc/dsl "0.1.3"]
                  [clj-http "3.6.1"]
+                 [com.layerware/hugsql "0.4.7"]
                  [org.postgresql/postgresql "9.4.1212"]
                  [environ "1.1.0"]]
   :main clj-discord-example.core

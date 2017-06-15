@@ -1,18 +1,16 @@
 (ns clj-discord-example.db
- (:require [clojure.java.jdbc :as j]) )
+  (:require [clojure.java.jdbc :as j]
+            [hugsql.core :as hugsql]) )
 
 (let [db-host "localhost"
       db-port 5432
       db-name "jsontest"]
 
-  (def pgdb {:classname "org.postgresql.Driver" ; must be in classpath
+  (def db {:classname "org.postgresql.Driver" ; must be in classpath
            :subprotocol "postgresql"
            :subname (str "//" db-host ":" db-port "/" db-name)
-                                        ; Any additional keys are passed to the driver
-                                        ; as driver-specific properties.
            :user "maxtweddell"
+           :stringtype "unspecified"
            :password "potato"}))
 
 
-(defn insert-message [message]
-  (j/db-do-commands pgdb (str "insert into test1 (info) VALUES" message ");")))
