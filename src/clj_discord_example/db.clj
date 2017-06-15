@@ -4,12 +4,12 @@
 
 (let [db-host "localhost"
       db-port 5432
-      db-name "jsontest"]
+      db-name "discord"]
 
   (def db {:classname "org.postgresql.Driver" ; must be in classpath
            :subprotocol "postgresql"
            :subname (str "//" db-host ":" db-port "/" db-name)
-           :user "maxtweddell"
+           :user "peon"
            :stringtype "unspecified"
            :password "potato"}))
 

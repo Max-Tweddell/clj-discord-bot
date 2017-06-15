@@ -3,6 +3,6 @@
 
 -- :name insert-message :! :n
 -- :doc Insert a single character
-insert into test1 (info)
+insert into messages (info)
 values (:message)
 --WITHOUT FUNCTION AS IMPLICIT
