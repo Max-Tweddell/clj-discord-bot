@@ -4,6 +4,7 @@
             [clj-discord-example.forecast :refer :all]
             [clj-http.client :as client]
             [clojure.string :as str]
+            [clj-discord-example.db.core :as db]
             ))
 
 (defonce token (.trim (slurp "token.txt")))
@@ -21,14 +22,21 @@
   (let [command (get data "content")]
     (discord/answer-command data "!weather" (str  "hi " (:humidity (:currently (forecast "37" "22")))))))
 
-(defn log-event [type data] 
-  (println "\nReceived: " type " -> " data))
+
+
+(defn log-event [type data]
+  (do
+    (println "\nReceived: " type " -> " data)
+    (db/save-message type data)
+    ))
+
+
 
 (defn -main [& args]
   (discord/connect token 
                    {"MESSAGE_CREATE" [d20 d100 weather command-test]
                     "MESSAGE_UPDATE" [d20 d100 weather command-test]
-                    ; "ALL_OTHER" [log-event]
+                    "ALL_OTHER" [log-event]
                     }
                    true))
 
