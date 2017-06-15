@@ -1,6 +1,7 @@
 (ns clj-discord-example.core
   (:gen-class)
   (:require [clj-discord.core :as discord]
+            [clj-discord-example.repl :as repl]
             [clj-discord-example.forecast :refer :all]
             [clj-http.client :as client]
             [cheshire.core :as json]
@@ -23,7 +24,13 @@
   (let [command (get data "content")]
     (discord/answer-command data "!humidity" (str  "hi " (:humidity (:currently (forecast "37" "22")))))))
 
-
+(defn void [type data]
+  (let [server (get data "channel_id")]
+    (if (= server "324776471883415552")
+      (discord/delete-message data)
+      )
+    )
+  )
 
 (defn log-event [type data]
   (do
@@ -32,13 +39,14 @@
     ))
 
 
-
 (defn -main [& args]
-  (discord/connect token 
-                   {"MESSAGE_CREATE" [d20 d100 weather command-test log-event]
-                    "MESSAGE_UPDATE" [d20 d100 weather command-test]
-                    ;;"ALL_OTHER" [log-event]
-                    }
-                   true))
+  (do
+    (discord/connect token 
+                     {"MESSAGE_CREATE" [d20 d100 weather command-test void repl/repl-command]
+                      "MESSAGE_UPDATE" [d20 d100 weather command-test void ]
+                      ;;"ALL_OTHER" [log-event]
+                      }
+                     true))
+  )
 
 ;(discord/disconnect)
