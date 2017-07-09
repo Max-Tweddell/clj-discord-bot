@@ -1,1 +1,0 @@
-web: java $JVM_OPTS -cp target/uberjar/clj-discord-bot.jar clojure.main -m clj-discord-bot.core
