@@ -25,6 +25,11 @@
   (let [command (get data "content")]
     (discord/answer-command data "!humidity" (str  "hi " (:humidity (:currently (forecast "37" "22")))))))
 
+(defn lmgtfy [data command answer]
+  (let [channel_id (get data "channel_id") message (get data "id")]
+    (discord/answer-command data (str "http://lmgtfy.com/?q=darude+sandstorm" (str/replace command " " "+" )))
+    ))
+
 (defn void [type data]
   (let [server (get data "channel_id")]
     (if (= server "324776471883415552")
