@@ -5,21 +5,22 @@
             [clj-discord-example.forecast :refer :all]
             [clj-http.client :as client]
             [cheshire.core :as json]
+
             [clj-discord-example.db :refer [db]]
-            [clj-discord-example.db.messages :as messages] 
-            ))
+            [clj-discord-example.db.messages :as messages]
+
+            [clojure.string :as str]))
 
 (defonce token (.trim (slurp "token.txt")))
 
 (defn d100 [type data]
   (discord/answer-command data "!d100" (str "Here you are a random number between 1 and 100: " (+ (rand-int 100) 1))))
 (defn d20 [type data]
-  (discord/answer-command data "!d20" (str "Here you are, a random number between 1 and 20 " (+ (rand-int 20) 1))))
+  (discord/answer-command data "!d20" (str "here u are a randem numbur bigger than 1 (one)  but littler than tweny sex: " (+ (rand-int 27) 1))))
 
 (defn command-test [type data]
   (let [command (get data "content")]
-    (discord/answer-command data "!blop" (str "blop " (str command)))
-    ))
+    (discord/answer-command data "!blop" (str "blop " (str command)))))
 (defn weather [type data]
   (let [command (get data "content")]
     (discord/answer-command data "!humidity" (str  "hi " (:humidity (:currently (forecast "37" "22")))))))
@@ -27,26 +28,33 @@
 (defn void [type data]
   (let [server (get data "channel_id")]
     (if (= server "324776471883415552")
-      (discord/delete-message data)
-      )
-    )
-  )
+      (discord/delete-message data))))
+(defn getRandomNumber [type data]
+  (let [command (get data "content")]
 
+    (discord/answer-command data "getRandomNumber()" (str "Here you are, a random number : " 4))))
+(defn mum [type data]
+  (let [command (get data "content")]
+    (discord/answer-message data "mom " "mum")))
+(defn oaky [type data]
+  (let [commmand (get data "content")]
+    (discord/answer-message data "oaky"  "https://68.media.tumblr.com/15208297a50932cccbef51a5dbeb47bf/tumblr_inline_ojfxuvC1RV1qierqv_540.jpg")))
 (defn log-event [type data]
   (do
     (println "\nReceived: " type " -> " data)
-    (messages/insert-message db {:message (json/generate-string data)})
-    ))
+    (messages/insert-message db {:message (json/generate-string data)})))
 
+(defn repler [type data]
+  (let [command (get data "content") args (str/join " " (rest (str/split (get data "content") #" ")))]
+    (discord/answer-command data "eval" (try  (eval (read-string args)) (catch Exception e (println "uh oh"))))))
 
 (defn -main [& args]
   (do
-    (discord/connect token 
-                     {"MESSAGE_CREATE" [d20 d100 weather command-test void repl/repl-command]
-                      "MESSAGE_UPDATE" [d20 d100 weather command-test void ]
+    (discord/connect token
+                     {"MESSAGE_CREATE" [d20 d100 weather command-test void getRandomNumber mum log-event oaky]
+                      "MESSAGE_UPDATE" [d20 d100 weather command-test void log-event]
                       ;;"ALL_OTHER" [log-event]
-                      }
-                     true))
-  )
+}
+                     true)))
 
 ;(discord/disconnect)
