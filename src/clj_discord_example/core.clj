@@ -14,9 +14,9 @@
 (defonce token (.trim (slurp "token.txt")))
 
 (defn d100 [type data]
-  (discord/answer-command data "!d100" (str "Here you are a random number between 1 and 100: " (+ (rand-int 100) 1))))
+  (discord/answer-command data "!d100" (str "Here you are a random number between 1 and 100: " (inc (rand-int 100)))))
 (defn d20 [type data]
-  (discord/answer-command data "!d20" (str "here u are a randem numbur bigger than 1 (one)  but littler than tweny sex: " (+ (rand-int 27) 1))))
+  (discord/answer-command data "!d20" (str "here u are a randem numbur bigger than 1 (one)  but littler than tweny sex: " (inc (rand-int 27)))))
 
 (defn command-test [type data]
   (let [command (get data "content")]
@@ -42,7 +42,7 @@
 (defn rot13 [type data]
   (let [command (get data "content")
         args (str/join " " (rest (str/split (get data "content") #" ")))]
-    (discord/answer-command data "encrypt" (apply str (map char (map (fn [x] (- x 5)) (map int args)))))))
+    (discord/answer-command data "encrypt" (clojure.string/join (map char (map (fn [x] (- x 5)) (map int args)))))))
 (defn mum [type data]
   (let [command (get data "content")]
     (discord/answer-message data "mom " "mum")))
@@ -59,12 +59,6 @@
     (discord/answer-command data "eval" (try  (eval (read-string args)) (catch Exception e (println "uh oh"))))))
 
 (defn -main [& args]
-  (do
-    (discord/connect token
-                     {"MESSAGE_CREATE" [d20 d100 weather command-test void getRandomNumber mum log-event oaky repler rot13]
-                      "MESSAGE_UPDATE" [d20 d100 weather command-test void log-event]
-                      ;;"ALL_OTHER" [log-event]
-}
-                     true)))
+  (discord/connect token {"MESSAGE_UPDATE" [d20 d100 weather command-test void log-event], "MESSAGE_CREATE" [d20 d100 weather command-test void getRandomNumber mum log-event oaky repler rot13]} true))
 
 ;(discord/disconnect)

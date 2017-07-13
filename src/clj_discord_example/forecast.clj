@@ -12,7 +12,7 @@
   [lat lon & {:keys [params time]}]
   (let [base-url "https://api.darksky.net/forecast"
         api-key secret ;(env :forecast-key)
-        url (join "/" [base-url api-key (join "," (filter #(not-empty %) (map str [lat lon time])))])
+        url (join "/" [base-url api-key (join "," (filter not-empty (map str [lat lon time])))])
         response (client/get url {:query-params params :throw-exceptions false})]
     (cond (= 200 (:status response))
           (json/parse-string (:body response) true))))

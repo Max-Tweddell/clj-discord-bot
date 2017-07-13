@@ -56,7 +56,7 @@
                (not (re-find #"^\s*=>" command))
                (not (re-find #"^\s*;" command))
                (not (re-find #"^\s*\(comment" command))
-               (not (= user "repl-bot")))
+               (not= user "repl-bot"))
       (discord/answer data (some-> command eval-request :result last)))))
 
 ; channel-id 315213511120912386

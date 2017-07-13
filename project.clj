@@ -10,7 +10,8 @@
                  [com.layerware/hugsql "0.4.7"]
                  [org.postgresql/postgresql "9.4.1212"]
                  [environ "1.1.0"]]
+  :plugins [[lein-kibit "0.1.5"] [lein-immutant "2.1.0"]]
   :main clj-discord-example.core
   :profiles {:uberjar
              {:aot [clj-discord-example.core]}}
-  :user {:env {:forecast-key "e0971c18e4fe3fa0bf9cbb286be291b6"}})
+  :user {:env {:forecast-key "e0971c18e4fe3fa0bf9cbb286be291b6"} })
