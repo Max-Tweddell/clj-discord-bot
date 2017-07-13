@@ -6,6 +6,7 @@
 /.nrepl-port
 /pom.xml
 
+token.txt
 *.jar
 /example/.classpath
 /example/.project
