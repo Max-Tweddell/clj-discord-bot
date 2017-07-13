@@ -25,19 +25,24 @@
   (let [command (get data "content")]
     (discord/answer-command data "!humidity" (str  "hi " (:humidity (:currently (forecast "37" "22")))))))
 
-(defn lmgtfy [data command answer]
+(defn lmgtfy [data command]
   (let [channel_id (get data "channel_id") message (get data "id")]
-    (discord/answer-command data (str "http://lmgtfy.com/?q=darude+sandstorm" (str/replace command " " "+" )))
+    (discord/answer-command data "lmgtfy" (str "http://lmgtfy.com/?q=darude+sandstorm" (str/replace command " " "+" )))
     ))
 
 (defn void [type data]
   (let [server (get data "channel_id")]
     (if (= server "324776471883415552")
       (discord/delete-message data))))
+
 (defn getRandomNumber [type data]
   (let [command (get data "content")]
-
     (discord/answer-command data "getRandomNumber()" (str "Here you are, a random number : " 4))))
+
+(defn rot13 [type data]
+  (let [command (get data "content")
+        args (str/join " " (rest (str/split (get data "content") #" ")))]
+    (discord/answer-command data "encrypt" (apply str (map char (map (fn [x] (- x 5)) (map int args)))))))
 (defn mum [type data]
   (let [command (get data "content")]
     (discord/answer-message data "mom " "mum")))
@@ -56,7 +61,7 @@
 (defn -main [& args]
   (do
     (discord/connect token
-                     {"MESSAGE_CREATE" [d20 d100 weather command-test void getRandomNumber mum log-event oaky]
+                     {"MESSAGE_CREATE" [d20 d100 weather command-test void getRandomNumber mum log-event oaky repler rot13]
                       "MESSAGE_UPDATE" [d20 d100 weather command-test void log-event]
                       ;;"ALL_OTHER" [log-event]
 }
