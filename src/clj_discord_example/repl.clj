@@ -44,7 +44,6 @@
     (catch Exception e
       {:error true :message (str (root-cause e))})))
 
-
 (defn log-event [type data]
   (println "\nReceived: " type " -> " data))
 
@@ -52,7 +51,7 @@
   (let [command (get data "content")
         channel (get data "channel_id")
         user (get-in data ["author" "username"])]
-    (when (and (= (some-> channel str Long/parseLong) 324776471883415552 )
+    (when (and (= (some-> channel str Long/parseLong) 324776471883415552)
                (not (re-find #"^\s*=>" command))
                (not (re-find #"^\s*;" command))
                (not (re-find #"^\s*\(comment" command))
@@ -65,7 +64,6 @@
                                                   nrepl-port 9876}} env]
 
     (discord/connect token
-                     {
-                      "MESSAGE_CREATE" [repl-command]
+                     {"MESSAGE_CREATE" [repl-command]
                       "ALL_OTHER"      [log-event]}
-true)))
+                     true)))

@@ -27,8 +27,7 @@
 
 (defn lmgtfy [data command]
   (let [channel_id (get data "channel_id") message (get data "id")]
-    (discord/answer-command data "lmgtfy" (str "http://lmgtfy.com/?q=darude+sandstorm" (str/replace command " " "+" )))
-    ))
+    (discord/answer-command data "lmgtfy" (str "http://lmgtfy.com/?q=darude+sandstorm" (str/replace command " " "+")))))
 
 (defn void [type data]
   (let [server (get data "channel_id")]

@@ -1,8 +1,7 @@
 (ns clj-discord-example.forecast
   (:use [clojure.string :only [join]]
         [environ.core]
-        [clojure.string :as str]
-        )
+        [clojure.string :as str])
   (:require [cheshire.core :as json]
             [clj-http.client :as client]))
 
@@ -19,6 +18,4 @@
 
 (defn forecaster [lat lon & {:keys [params time]}]
   (let [forecast-result (forecast lat lon)]
-    (:humidity (:currently forecast-result))
-       )
-  )
+    (:humidity (:currently forecast-result))))
