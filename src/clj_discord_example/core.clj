@@ -39,10 +39,14 @@
   (let [command (get data "content")]
     (discord/answer-command data "getRandomNumber()" (str "Here you are, a random number : " 4))))
 
-(defn rot13 [type data]
-  (let [command (get data "content")
-        args (str/join " " (rest (str/split (get data "content") #" ")))]
-    (discord/answer-command data "encrypt" (clojure.string/join (map char (map (fn [x] (- x 5)) (map int args)))))))
+(let [A (into #{} "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+      Am (->> (cycle A) (drop 26) (take 52) (zipmap A))]
+  (defn rot13 [^String in]
+    (apply str (map #(Am % %) in))))
+
+(defn encrypt [type data]
+  (let [command (get data "content")]
+    (discord/answer-message data "encrypt" (rot13 (str (rest command))))))
 (defn mum [type data]
   (let [command (get data "content")]
     (discord/answer-message data "mom " "mum")))
@@ -56,9 +60,9 @@
 
 (defn repler [type data]
   (let [command (get data "content") args (str/join " " (rest (str/split (get data "content") #" ")))]
-    (discord/answer-command data "eval" (try  (eval (read-string args)) (catch Exception e (println "uh oh"))))))
+    (discord/answer-command data "eval" (try  (eval (read-string args)) (catch Exception e (println "uh oh") (discord/answer-command data "error"))))))
 
 (defn -main [& args]
   (discord/connect token {"MESSAGE_UPDATE" [d20 d100 weather command-test void log-event], "MESSAGE_CREATE" [d20 d100 weather command-test void getRandomNumber mum log-event oaky repler rot13]} true))
 
-;(discord/disconnect)
+                                        ;(discord/disconnect)
