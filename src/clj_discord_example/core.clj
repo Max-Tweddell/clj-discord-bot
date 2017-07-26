@@ -1,7 +1,6 @@
 (ns clj-discord-example.core
   (:gen-class)
   (:require [clj-discord.core :as discord]
-            [clj-discord-example.repl :as repl]
             [clj-http.client :as client]
             [cheshire.core :as json]
             [clj-discord-example.db :refer [db]]
@@ -18,9 +17,6 @@
 (defn command-test [type data]
   (let [command (get data "content")]
     (discord/answer-command data "!blop" (str "blop " (str command)))))
-(defn weather [type data]
-  (let [command (get data "content")]
-    (discord/answer-command data "!humidity" (str  "hi " (:humidity (:currently (forecast "37" "22")))))))
 
 (defn lmgtfy [data command]
   (let [channel_id (get data "channel_id") message (get data "id")]
@@ -66,7 +62,7 @@
     (discord/answer-command data "eval" (try  (eval (read-string args)) (catch Exception e (println "uh oh") (discord/answer-command data "error"))))))
 
 (defn -main [& args]
-  (discord/connect token {"MESSAGE_UPDATE" [d20 d100 weather command-test void log-event]
-                          "MESSAGE_CREATE" [d20 d100 weather command-test void getRandomNumber mum log-event oaky repler encrypt decrypt getRandomMessage]} true))
+  (discord/connect token {"MESSAGE_UPDATE" [d20 d100 command-test void log-event]
+                          "MESSAGE_CREATE" [d20 d100 command-test void getRandomNumber mum log-event oaky repler encrypt decrypt getRandomMessage]} true))
 
                                         ;(discord/disconnect)
