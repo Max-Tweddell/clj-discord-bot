@@ -30,6 +30,9 @@
     (discord/answer-command data "lmgtfy" (str "http://lmgtfy.com/?q=darude+sandstorm" (str/replace command " " "+" )))
     ))
 
+(defn getRandomMessage [type data]
+  (let [commmand (get data "content" )]
+   (discord/answer-command data "random" (str (messages/random-message db)))))
 (defn void [type data]
   (let [server (get data "channel_id")]
     (if (= server "324776471883415552")
@@ -38,15 +41,18 @@
 (defn getRandomNumber [type data]
   (let [command (get data "content")]
     (discord/answer-command data "getRandomNumber()" (str "Here you are, a random number : " 4))))
-
-(let [A (into #{} "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
-      Am (->> (cycle A) (drop 26) (take 52) (zipmap A))]
-  (defn rot13 [^String in]
+(defn rot13 [in]
+  (let [A (into #{} "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+        Am (->> (cycle A) (drop 26) (take 52) (zipmap A))]
     (apply str (map #(Am % %) in))))
 
 (defn encrypt [type data]
-  (let [command (get data "content")]
-    (discord/answer-message data "encrypt" (rot13 (str (rest command))))))
+  (let [command (get data "content") args (str/join " " (rest (str/split (get data "content") #" ")))]
+    (discord/answer-command data "encrypt" (rot13 args))))
+(defn decrypt [type data]
+  (let [command (get data "content") args (str/join " " (rest (str/split (get data "content") #" ")))]
+    (try (discord/answer-command data "decrypt" (str args "->" (rot13 args))) (catch Exception e (println "args")))))
+
 (defn mum [type data]
   (let [command (get data "content")]
     (discord/answer-message data "mom " "mum")))
@@ -63,6 +69,7 @@
     (discord/answer-command data "eval" (try  (eval (read-string args)) (catch Exception e (println "uh oh") (discord/answer-command data "error"))))))
 
 (defn -main [& args]
-  (discord/connect token {"MESSAGE_UPDATE" [d20 d100 weather command-test void log-event], "MESSAGE_CREATE" [d20 d100 weather command-test void getRandomNumber mum log-event oaky repler rot13]} true))
+  (discord/connect token {"MESSAGE_UPDATE" [d20 d100 weather command-test void log-event]
+                          "MESSAGE_CREATE" [d20 d100 weather command-test void getRandomNumber mum log-event oaky repler encrypt decrypt getRandomMessage]} true))
 
                                         ;(discord/disconnect)
