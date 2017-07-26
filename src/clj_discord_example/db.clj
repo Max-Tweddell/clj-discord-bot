@@ -1,6 +1,6 @@
 (ns clj-discord-example.db
   (:require [clojure.java.jdbc :as j]
-            [hugsql.core :as hugsql]) )
+            [hugsql.core :as hugsql]))
 
 (let [db-host "localhost"
       db-port 5432
@@ -12,5 +12,4 @@
            :user "peon"
            :stringtype "unspecified"
            :password "potato"}))
-
 
